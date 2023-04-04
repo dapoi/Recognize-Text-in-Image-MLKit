@@ -4,10 +4,14 @@ import android.os.Bundle
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import com.dapascript.recognizetext.databinding.ActivityResultBinding
+import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.ktx.firestore
+import com.google.firebase.ktx.Firebase
 
 class ResultActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityResultBinding
+    private lateinit var database: FirebaseFirestore
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -16,8 +20,18 @@ class ResultActivity : AppCompatActivity() {
 
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
-        val result = intent.getStringExtra("result")
-        binding.etResult.setText(result)
+        database = Firebase.firestore
+
+        val photoResult = database.collection("photoResult")
+        photoResult.document("text").get()
+            .addOnSuccessListener { document ->
+                if (document != null) {
+                    binding.etResult.setText(document.getString("resultText"))
+                }
+            }
+            .addOnFailureListener { exception ->
+                binding.etResult.setText(exception.toString())
+            }
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {

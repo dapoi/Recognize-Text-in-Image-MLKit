@@ -1,5 +1,6 @@
 package com.dapascript.recognizetext
 
+import android.annotation.SuppressLint
 import android.app.Application
 import android.content.Intent
 import android.os.Build
@@ -97,6 +98,7 @@ class CameraActivity : AppCompatActivity() {
         return File(outputDirectory, "$timeStamp.jpg")
     }
 
+    @SuppressLint("ClickableViewAccessibility")
     private fun startCamera() {
 
         val cameraProviderFuture = ProcessCameraProvider.getInstance(this)
